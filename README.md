@@ -1,0 +1,106 @@
+# fastapi-sample
+
+A sample CRUD REST API built with [FastAPI](https://fastapi.tiangolo.com/), using an in-memory store.
+
+## Features
+
+- Full CRUD for an `Employee` resource
+- Input validation with Pydantic v2
+- Auto-generated interactive docs (Swagger UI & ReDoc)
+- Test suite with `pytest` and FastAPI's `TestClient`
+
+## Project Structure
+
+```
+fastapi-sample/
+├── app/
+│   ├── main.py              # FastAPI app entry point
+│   ├── store.py             # In-memory data store
+│   ├── schemas/
+│   │   └── employee.py      # Pydantic request/response models
+│   └── routers/
+│       └── employees.py     # Employee CRUD endpoints
+├── tests/
+│   └── test_employees.py    # Test suite
+├── pyproject.toml           # Project metadata & dependencies (uv)
+└── .gitignore
+```
+
+## Prerequisites
+
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/) — install with:
+  ```bash
+  # Windows (PowerShell)
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+  # macOS / Linux
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+
+## Getting Started
+
+```bash
+# Enter the project
+cd fastapi-sample
+
+# Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Sync dependencies and create virtual environment
+uv sync --extra dev
+
+# Run the development server
+uv run uvicorn app.main:app --reload
+```
+
+The API will be available at `http://127.0.0.1:8000`.
+
+## API Docs
+
+Once the server is running, access the interactive documentation at:
+
+| URL | Description |
+|-----|-------------|
+| `http://127.0.0.1:8000/docs` | Swagger UI (interactive - try endpoints here) |
+| `http://127.0.0.1:8000/redoc` | ReDoc (alternative documentation) |
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/` | Health check |
+| `GET` | `/employees/` | List all employees |
+| `GET` | `/employees/{id}` | Get employee by ID |
+| `POST` | `/employees/` | Create a new employee |
+| `PUT` | `/employees/{id}` | Update an employee (partial) |
+| `DELETE` | `/employees/{id}` | Delete an employee |
+
+### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/employees/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice Smith", "email": "alice@example.com", "department": "Engineering", "salary": 75000}'
+```
+
+## Running Tests
+
+Once dependencies are installed via `uv sync --extra dev`, run tests with:
+
+```bash
+uv run pytest
+```
+
+## Dependency Management
+
+Dependencies are declared in `pyproject.toml` and managed by `uv`:
+
+```bash
+uv sync --extra dev      # Install all dependencies (dev included)
+uv add <package>         # Add a runtime dependency
+uv add --dev <package>   # Add a dev dependency
+uv remove <package>      # Remove a dependency
+uv lock                  # Regenerate the lockfile
+```
