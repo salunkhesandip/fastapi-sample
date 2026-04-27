@@ -1,5 +1,10 @@
 from fastapi import FastAPI
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
 from app.routers import employees
+from app.telemetry import setup_telemetry
+
+setup_telemetry()
 
 app = FastAPI(
     title="Employee API",
@@ -8,6 +13,8 @@ app = FastAPI(
 )
 
 app.include_router(employees.router)
+
+FastAPIInstrumentor.instrument_app(app)
 
 
 @app.get("/", tags=["health"])
